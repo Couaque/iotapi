@@ -32,7 +32,7 @@ def whipper(target, port, buffer):
 @app.route('/portscan/<target>')
 def portscan(target):
     buffer=[]
-    for port in range(1,60000) :
+    for port in range(1,65535) :
         q.put(port)
         t = Thread(target=whipper, args=(target,port,buffer,))
         t.setDaemon(True)
