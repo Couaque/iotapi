@@ -8,7 +8,7 @@ def ping(target):
         print("RUNNING : ping -c4 " + target)
         completed = subprocess.run("ping -c4 " + target, shell=True, stdout=subprocess.PIPE)
 
-        output = output = completed.stdout.decode('utf-8')
+        output = completed.stdout.decode('utf-8')
         print(output)
         print('returncode:', completed.returncode)
 

@@ -6,3 +6,7 @@ from subprocess import check_output
 app = Flask(__name__)
 
 import ping, portscan
+
+@app.route('/')
+def main():
+    return Response('Root directory of the API !')
