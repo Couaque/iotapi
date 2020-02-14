@@ -1,4 +1,4 @@
-import subprocess, ujson, socket, threading, sys
+import subprocess, ujson, socket, threading, sys, time
 from flask import Response
 from main import app
 from threading import Thread, Lock
@@ -7,7 +7,6 @@ from queue import Queue
 q = Queue()
 
 def scan_single_port(target, portnb, buffer):
-    #print(target + ":" + str(portnb))
     s = socket.socket()
     try:
         s.settimeout(0.1)
@@ -30,8 +29,9 @@ def whipper(target, port, buffer):
 
 @app.route('/portscan/<target>')
 def portscan(target):
+    starttime= time.time()
     buffer=[]
-    for port in range(1,10000) :
+    for port in range(1,65535) :
         q.put(port)
         t = Thread(target=whipper, args=(target,port,buffer,))
         t.setDaemon(True)
@@ -47,5 +47,8 @@ def portscan(target):
         if output[0] == '[' : 
             output = ujson.loads(output)
             res[str(port)] = output
+        else:
+            res[str(port)] = "NO INFO"
 
+    print('Portscan executed in %s seconds' % (time.time() - starttime))
     return Response(ujson.dumps(res), mimetype="application/json")
