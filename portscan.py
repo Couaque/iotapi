@@ -5,7 +5,6 @@ from threading import Thread, Lock
 from queue import Queue
 
 q = Queue()
-cpt = 1024
 
 def scan_single_port(target, portnb, buffer):
     #print(target + ":" + str(portnb))
@@ -22,7 +21,7 @@ def scan_single_port(target, portnb, buffer):
     return None
 
 def whipper(target, port, buffer):
-    global q, cpt
+    global q
     port = q.get()
     scan_single_port(target, port, buffer)
     q.task_done()
@@ -32,11 +31,21 @@ def whipper(target, port, buffer):
 @app.route('/portscan/<target>')
 def portscan(target):
     buffer=[]
-    for port in range(1,65535) :
+    for port in range(1,10000) :
         q.put(port)
         t = Thread(target=whipper, args=(target,port,buffer,))
         t.setDaemon(True)
         t.start()
 
     q.join()
-    return Response(ujson.dumps(buffer), mimetype="application/json")
+    res=dict()
+    for port in buffer:
+        print(port)
+        tmp_thr=subprocess.run("whatportis " + str(port) + " --json", shell=True, stdout=subprocess.PIPE)
+        output = tmp_thr.stdout.decode('utf-8')
+        print(output)
+        if output[0] == '[' : 
+            output = ujson.loads(output)
+            res[str(port)] = output
+
+    return Response(ujson.dumps(res), mimetype="application/json")
