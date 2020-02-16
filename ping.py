@@ -1,7 +1,7 @@
 #Usual imports
 import subprocess, ujson
 from flask import Response
-from main import app
+from app import app
 
 #This code will be executed when the URL is reached.
 #<target> means that we give it a parameter
@@ -10,7 +10,7 @@ def ping(target):
     try:
         #We run the ping command inside our Linux machine.
         print("RUNNING : ping -c4 " + target)
-        completed = subprocess.run("ping -c4 " + target, shell=True, stdout=subprocess.PIPE)
+        completed = subprocess.run("ping " + target, shell=True, stdout=subprocess.PIPE)
 
         #We decode the output as UTF-8...
         output = completed.stdout.decode('utf-8')

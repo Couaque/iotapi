@@ -1,6 +1,6 @@
 import subprocess, ujson, socket, threading, sys, time
 from flask import Response
-from main import app
+from app import app
 from threading import Thread, Lock
 from queue import Queue
 
@@ -44,6 +44,7 @@ def whipper(target, port, buffer):
 #This is the function we call when the user reaches
 @app.route('/portscan/<target>')
 def portscan(target):
+    threading.stack_size(64*1024)
     #We start the timer to see how much time it took to run the port scan.
     #This is for debugging purposes
     starttime= time.time()
