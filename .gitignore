@@ -1,3 +1,6 @@
+#Temporary files created by IOTAPI
+tmp*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
