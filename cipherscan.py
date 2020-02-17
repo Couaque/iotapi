@@ -1,5 +1,5 @@
 #Usual imports
-import subprocess, ujson, xmltodict
+import subprocess, ujson
 from flask import Response
 from app import app
 
@@ -9,18 +9,20 @@ def cipherscan(target):
     try:
         #We run the nmap script inside our Linux machine.
         print("RUNNING : nmap -sV --script ssl-enum-ciphers -p 443 " + target)
-        completed = subprocess.run("nmap -sV -oX tmp.xml --script ssl-enum-ciphers -p 443 " + target, shell=True, stdout=subprocess.PIPE)
+        completed = subprocess.run("nmap -sV --script ssl-enum-ciphers -p 443 " + target, shell=True, stdout=subprocess.PIPE)
+
+        #We decode the output as UTF-8...
+        output = completed.stdout.decode('utf-8')
 
         #...Then we print the result for debugging purposes
+        print(output)
         print('returncode:', completed.returncode)
 
-        output = open("tmp.xml")
-        xml_content = output.read()
-        output.close()
-        dictxml = xmltodict.parse(xml_content)
-
-        output = ujson.dumps(dictxml, indent=4, sort_keys=True)
-
+        #To make this easier I split the single string corresponding with the console result
+        #In an array of multiple lines, by spiting the string in a new array cell every time
+        #there is a return character, \n
+        output = output.split("\n")
+        
     #If the process call goes wrong for some reason, we raise an exception.
     #This allows us to keep the program running.
     except subprocess.CalledProcessError as err :
@@ -28,4 +30,4 @@ def cipherscan(target):
         output = "ERROR: " + completed.stdout.decode('utf-8')
 
     #We return an HTTP response anyway, error or not.
-    return Response(output, mimetype="application/json")
+    return Response(ujson.dumps(output), mimetype="application/json")
