@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 #We need this line to import the different Python files for
 #each feature. This is vital as well.
-import ping, portscan, cipherscan
+import ping, portscan, cipherscan, servicescan
 
 #Printing the route map for debugging purposes
 print(app.url_map)
