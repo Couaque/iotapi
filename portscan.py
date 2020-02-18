@@ -4,6 +4,10 @@ from app import app
 from threading import Thread, Lock
 from queue import Queue
 
+from concurrent.futures import ThreadPoolExecutor
+import threading
+import random
+
 #We create the job queue to store all the jobs that we will give to threads.
 q = Queue()
 
@@ -13,53 +17,38 @@ def scan_single_port(target, portnb, buffer):
     #We open the TCP socket
     s = socket.socket()
     #We try to connect to the specific port. 
+    print(str((portnb / 65536) * 100), end = '\r')
     try:
-        s.settimeout(0.1)
+        s.settimeout(0.01)
         s.connect((target,portnb))
-    #If we can't connect we simply return True
-    except:
-        print(buffer)
         s.close()
-    #If we can connect, we print that the port is open and add it to the list of open ports in buffer
-    else:
-        print("Port " + str(portnb) + " open")
         buffer.append(portnb)
-        return False
-    #I added a return here, to return an empty object. I doubt that this is useful
-    return None
+        #print(buffer, end = '')
+        return True
+    except:
+        s.close()
+        return True
+    #If we can connect, we print that the port is open and add it to the list of open ports in buffer
+    s.close()
+    return True
 
-#This function takes a port from the job queue and sends it to scan_single_port
-#This allows us to create threads, mostly limited by the power of your CPU.
-def whipper(target, port, buffer):
-    global q
-    #We get a port from the queue
-    port = q.get()
-    #we give it to the scan_single_port function
-    scan_single_port(target, port, buffer)
-    #Once it's done we notify the system that it's done.
-    q.task_done()
-    q.join()
-    #Just a quick print to show the current number of threads.
-    print("Number of threads : " + str(threading.active_count()))
-        
 
 #This is the function we call when the user reaches
 @app.route('/portscan/<target>')
-def portscan(target):
+@app.route('/portscan/<target>/<workers>')
+def portscan(target, workers = 3):
     #We start the timer to see how much time it took to run the port scan.
     #This is for debugging purposes
-    starttime= time.time()
-    buffer=[]
+    starttime = time.time()
+    buffer =[]
+    executor = ThreadPoolExecutor(max_workers=3)
+    
     #We scan all ports in the range, created a thread for each of them
-    for port in range(1,65535) :
-        q.put(port)
-        t = Thread(target=whipper, args=(target,port,buffer,))
-        #t.setDaemon(True)
-        t.start()
-        t.join()
+    for port in range(1,65536) :
+        executor.submit(scan_single_port, target, port, buffer)        
 
-    #We wait for all threads to be finished before continuing to process the resulting ports
-    q.join()
+    executor.shutdown(wait=True)
+
     #We create the dictionary that will be converted to JSON for the response
     res=dict()
 
