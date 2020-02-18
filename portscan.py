@@ -18,7 +18,8 @@ def scan_single_port(target, portnb, buffer):
         s.connect((target,portnb))
     #If we can't connect we simply return True
     except:
-        return True
+        print(buffer)
+        s.close()
     #If we can connect, we print that the port is open and add it to the list of open ports in buffer
     else:
         print("Port " + str(portnb) + " open")
@@ -37,6 +38,7 @@ def whipper(target, port, buffer):
     scan_single_port(target, port, buffer)
     #Once it's done we notify the system that it's done.
     q.task_done()
+    q.join()
     #Just a quick print to show the current number of threads.
     print("Number of threads : " + str(threading.active_count()))
         
@@ -44,7 +46,6 @@ def whipper(target, port, buffer):
 #This is the function we call when the user reaches
 @app.route('/portscan/<target>')
 def portscan(target):
-    threading.stack_size(64*1024)
     #We start the timer to see how much time it took to run the port scan.
     #This is for debugging purposes
     starttime= time.time()
@@ -53,8 +54,9 @@ def portscan(target):
     for port in range(1,65535) :
         q.put(port)
         t = Thread(target=whipper, args=(target,port,buffer,))
-        t.setDaemon(True)
+        #t.setDaemon(True)
         t.start()
+        t.join()
 
     #We wait for all threads to be finished before continuing to process the resulting ports
     q.join()
