@@ -36,14 +36,28 @@ def servicescan(target, ports):
                 #...We add it to tmp
                 tmp.append(line)
         #We replace output with the value of tmp to trim all useless lines
-        output = tmp
-            
+        output = []
+        for line in tmp:
+            line = line.split(" ")
+            for word in line :
+                if word == "":
+                    line.remove("")
+            output.append(line)
         
+        res = []
+        for line in output:
+            port = line[0]
+            opened = line [1]
+            description = ""
+            for word in line[2:]:
+                description = description + word + ' '
+            res.append([port, opened, description])
+
     #If the process call goes wrong for some reason, we raise an exception.
     #This allows us to keep the program running.
     except subprocess.CalledProcessError as err :
         print('ERROR:', err)
-        output = "ERROR: " + completed.stdout.decode('utf-8')
+        res = "ERROR: " + completed.stdout.decode('utf-8')
 
     #We return an HTTP response anyway, error or not.
-    return Response(ujson.dumps(output), mimetype="application/json")
+    return Response(ujson.dumps(res), mimetype="application/json")
