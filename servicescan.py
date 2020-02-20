@@ -48,10 +48,11 @@ def servicescan(target, ports):
         for line in output:
             port = line[0]
             opened = line [1]
+            service = line[2]
             description = ""
-            for word in line[2:]:
+            for word in line[3:]:
                 description = description + word + ' '
-            res.append([port, opened, description])
+            res.append([port, opened, service, description])
 
     #If the process call goes wrong for some reason, we raise an exception.
     #This allows us to keep the program running.
