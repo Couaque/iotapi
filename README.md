@@ -31,7 +31,7 @@ sudo ./install.sh
 ```
 Once it's installed, you will have to run the API on your machine for it to respond to HTTP requests :
 ```
-export FLASK_APP=main.py
+export FLASK_APP=app.py
 flask run
 ```
 ### Manual installation
