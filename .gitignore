@@ -1,5 +1,8 @@
 #Temporary files created by IOTAPI
 tmp*
+#Mozilla's cipherscan binary
+cipherscan/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
