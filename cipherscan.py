@@ -9,7 +9,7 @@ def cipherscan(target):
     try:
         #We run the nmap script inside our Linux machine.
         print("RUNNING : nmap -oX - -sV --script ssl-enum-ciphers -p 443 " + target)
-        completed = subprocess.run("../cipherscan/cipherscan -j --curves " + target, shell=True, stdout=subprocess.PIPE)
+        completed = subprocess.run("./cipherscan/cipherscan -j --curves " + target, shell=True, stdout=subprocess.PIPE)
 
         #We decode the output as UTF-8...
         output = completed.stdout.decode('utf-8')
