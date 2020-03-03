@@ -12,4 +12,4 @@ pip3 install flask ujson whatportis xmltodict
 echo "Installing Mozilla Cipher Scanner..."
 git clone https://github.com/mozilla/cipherscan
 
-./cipherscan --curves -j google.com
+./cipherscan/cipherscan --curves -j google.com
