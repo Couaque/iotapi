@@ -25,8 +25,8 @@ You can also run this on WSL if you don't already have an Ubuntu machine install
 
 Something like this should work :
 ```
-git clone https://github.com/Couaque/iotapi
-cd iotapi
+git clone https://github.com/Couaque/yavs
+cd yavs
 sudo ./install.sh
 ```
 Once it's installed, you will have to run the API on your machine for it to respond to HTTP requests :
