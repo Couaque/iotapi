@@ -7,8 +7,8 @@ from app import app
 @app.route('/cipherscan/<target>')
 def cipherscan(target):
     try:
-        #We run the nmap script inside our Linux machine.
-        print("RUNNING : nmap -oX - -sV --script ssl-enum-ciphers -p 443 " + target)
+        #We run the Mozilla binary inside our Linux machine.
+        print("RUNNING : ./cipherscan/cipherscan -j --curves " + target)
         completed = subprocess.run("./cipherscan/cipherscan -j --curves " + target, shell=True, stdout=subprocess.PIPE)
 
         #We decode the output as UTF-8...

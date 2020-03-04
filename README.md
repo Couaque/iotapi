@@ -29,10 +29,22 @@ git clone https://github.com/Couaque/yavs
 cd yavs
 sudo ./install.sh
 ```
+
+## Run the API
+### Testing purposes
 Once it's installed, you will have to run the API on your machine for it to respond to HTTP requests :
 ```
-export FLASK_APP=app.py
-flask run
+flask run -p <port>
+```
+
+### Production
+You can deploy this project using Gunicorn, which has been installed using pip3 if you used the install script.
+
+You can then run the API using the following command :
+```
+gunicorn --bind=<rechable_IP>:<port> <project>:app
+
+Example : gunicorn --bind=192.168.0.200:8000 app:app
 ```
 ### Manual installation
 You will still have to clone this Git repository, but you will have to install the different Python dependancies before using this software :

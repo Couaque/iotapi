@@ -2,6 +2,7 @@
 tmp*
 #Mozilla's cipherscan binary
 cipherscan/
+tmp.xml
 
 
 # Byte-compiled / optimized / DLL files
