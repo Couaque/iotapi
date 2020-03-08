@@ -3,7 +3,7 @@ import ujson
 import requests
 import sys
 from app import app
-from flask import Response
+from flask import Response, request
 
 
 #This function takes the full subdomain URL from the subdomains() function, and checks if it's accessible.
@@ -20,8 +20,13 @@ def request_subdomain(subdomain_url):
                 pass
 
 #This function iterates through each line of the wordlist and appends this to make a full URL. When the tool finishes running, this function returns the results in JSON.
-@app.route('/subdomains/<target_url>')
-def subdomains(target_url):
+@app.route('/subdomains')
+def subdomains():
+        #Allow a full URL to be parsed correctly
+        target_url = request.args.get('target_url',default = 1, type = str)
+        target_url = target_url.replace("https://","")
+        target_url = target_url.replace("http://","")
+        target_url = target_url.replace("www.","")
         global valid_subdomains # Make valid_subdomains a global variable
         valid_subdomains = [] # Clear the valid_subdomains list (this is so it doesn't keep appending the previous list if the scan is run more than once)
         # Opens the wordlist file as read-only
