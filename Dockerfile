@@ -7,14 +7,15 @@ CMD locale-gen
 
 #RUN adduser -D yavs-api
 RUN apt update && apt full-upgrade -y
-RUN apt install -y python3-flask
+RUN apt install -y python3-flask iputils-ping nmap
 
 
 COPY . /root/yavs
 RUN cd /root/yavs
 #RUN chmod +x boot.sh
-RUN /root/yavs/install.sh
+
 WORKDIR /root/yavs
+RUN /root/yavs/install.sh
 
 ENV FLASK_APP app.py
 
