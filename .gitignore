@@ -3,6 +3,7 @@ tmp*
 #Mozilla's cipherscan binary
 cipherscan/
 tmp.xml
+yavs-gui/
 
 
 # Byte-compiled / optimized / DLL files
