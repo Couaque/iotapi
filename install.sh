@@ -5,7 +5,7 @@ echo "Installing Python3 and PIP from APT..."
 apt install python3 python3-pip nmap python python-pip git -y
 
 echo "Installing Python modules from pip3 repos..."
-pip3 install flask ujson whatportis xmltodict gunicorn
+pip3 install flask ujson whatportis xmltodict gunicorn regex
 
 echo "Install Python 2 dependancies"
 pip install six

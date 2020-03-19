@@ -1,7 +1,7 @@
 #Usual imports
-import subprocess, ujson, re
 from flask import Response
 from app import app
+import subprocess, ujson, re
 
 
 @app.route('/servicescan/<target>/<ports>')
@@ -32,7 +32,7 @@ def servicescan(target, ports):
         #We go through each line of output
         for line in output:
             #If the regex matches the line...
-            if type(p.match(line)) == re.Match :
+            if p.match(line) is not None :
                 #...We add it to tmp
                 tmp.append(line)
 
