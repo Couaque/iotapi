@@ -6,7 +6,7 @@ ENV LC_ALL C.UTF-8
 CMD locale-gen
 
 #RUN adduser -D yavs-api
-RUN apt update && apt full-upgrade
+RUN apt update && apt full-upgrade -y
 RUN apt install -y python3-flask
 
 
