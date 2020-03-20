@@ -20,20 +20,20 @@ def request_subdomain(subdomain_url):
                 pass
 
 #This function iterates through each line of the wordlist and appends this to make a full URL. When the tool finishes running, this function returns the results in JSON.
-@app.route('/subdomains')
-def subdomains():
-        #Allow a full URL to be parsed correctly
-        target_url = request.args.get('target_url',default = 1, type = str)
-        target_url = target_url.replace("https://","")
-        target_url = target_url.replace("http://","")
-        target_url = target_url.replace("www.","")
+@app.route('/subdomains/<target>') #URL is now /subdomains?target_url="URL"
+def subdomains(target):
+        #Might bring back the below 4 lines later...
+        # target_url = request.args.get('target_url',default = 1, type = str)
+        # target_url = target_url.replace("https://","")
+        # target_url = target_url.replace("http://","")
+        # target_url = target_url.replace("www.","")
         global valid_subdomains # Make valid_subdomains a global variable
         valid_subdomains = [] # Clear the valid_subdomains list (this is so it doesn't keep appending the previous list if the scan is run more than once)
         # Opens the wordlist file as read-only
         # FOR loop runs through each line of the wordlist file
         wordlist = open("./test_wordlist", "r")
         for each_line in wordlist:
-                request_subdomain("http://" + each_line.strip() + "." + target_url) # Calls the request_subdomain function against each possible subdomain
+                request_subdomain("http://" + each_line.strip() + "." + target) # Calls the request_subdomain function against each possible subdomain
         else: # When FOR loop finishes:
             return Response(ujson.dumps(valid_subdomains), mimetype="application/json") # Send a response using JSON
 
