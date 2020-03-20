@@ -14,6 +14,7 @@ def request_subdomain(subdomain_url):
                 get_response = requests.get(subdomain_url) 
                 if str(get_response) ==  "<Response [200]>":
                         print("[+] " + subdomain_url + " is a valid subdomain") 
+                        subdomain_url = subdomain_url.replace("http://", "")
                         valid_subdomains.append(subdomain_url)
         # If the requests.exceptions.ConnectionError exception is raised, we know the connection failed and move on to the next URL
         except requests.exceptions.ConnectionError:
