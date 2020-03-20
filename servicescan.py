@@ -1,7 +1,7 @@
 #Usual imports
-import subprocess, ujson, re
 from flask import Response
 from app import app
+import subprocess, ujson, re
 
 
 @app.route('/servicescan/<target>/<ports>')
@@ -32,9 +32,10 @@ def servicescan(target, ports):
         #We go through each line of output
         for line in output:
             #If the regex matches the line...
-            if type(p.match(line)) == re.Match :
+            if p.match(line) is not None :
                 #...We add it to tmp
                 tmp.append(line)
+
         #We replace output with the value of tmp to trim all useless lines
         output = []
         for line in tmp:
@@ -44,6 +45,8 @@ def servicescan(target, ports):
                     line.remove("")
             output.append(line)
         
+        #For each service, we take the different values that we created when splitting the line, then we append them to
+        #The res array, which contains our result.
         res = []
         for line in output:
             port = line[0]

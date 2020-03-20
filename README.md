@@ -25,14 +25,41 @@ You can also run this on WSL if you don't already have an Ubuntu machine install
 
 Something like this should work :
 ```
-git clone https://github.com/Couaque/iotapi
-cd iotapi
+git clone https://github.com/Couaque/yavs
+cd yavs
 sudo ./install.sh
 ```
+
+### Run the full project from Docker
+The easiest way to use the API is to run it from a machine with Docker installed.
+You can run the full api by using the following commands. Docker will automatically download the containers with all the prerequisites already installed, and will run the containers in the background.
+```
+sudo docker run -d -p 0.0.0.0:8000:8000 --network host couaque/yavs-api
+sudo docker run -d -p 0.0.0.0:8001:8001 --network host couaque/yavs-gui
+```
+
+Access the GUI using port 8001 and the API using port 8000. Both use HTTP.
+
+If you want to install docker, you can use the following command if you run on a Debian-based OS :
+```
+sudo apt install docker.io
+```
+
+## Run the API
+### Testing purposes
 Once it's installed, you will have to run the API on your machine for it to respond to HTTP requests :
 ```
-export FLASK_APP=app.py
-flask run
+flask run -p <port>
+```
+
+### Production
+You can deploy this project using Gunicorn, which has been installed using pip3 if you used the install script.
+
+You can then run the API using the following command :
+```
+gunicorn --bind=<rechable_IP>:<port> <project>:app
+
+Example : gunicorn --bind=192.168.0.200:8000 app:app
 ```
 ### Manual installation
 You will still have to clone this Git repository, but you will have to install the different Python dependancies before using this software :
