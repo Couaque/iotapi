@@ -15,7 +15,7 @@ def databasescan(target):
     try:
 
         #Run SQLMap on imported website to display available databases
-        runsqlmap = subprocess.run("sudo sqlmap -u" + target + " --dbs -batch --threads=4", shell=True, stdout=subprocess.PIPE)
+        runsqlmap = subprocess.run("sqlmap -u" + target + " --dbs -batch --threads=4", shell=True, stdout=subprocess.PIPE)
         #converting output to UTF8 for formatting
         output = runsqlmap.stdout.decode('utf-8')
         #splitting each line of output onto a new line
@@ -26,7 +26,7 @@ def databasescan(target):
 
         iterate = 0
         lines_to_print = ""
-        search_a = 0
+        search_a = "MySQL"
 
         for line in output:
             if line.startswith("available databases"):
@@ -40,13 +40,14 @@ def databasescan(target):
                 iterate = iterate-1
 
         #run sqlmap to show the underlying databse format used
-        runsqlmap2 = subprocess.run("sudo sqlmap -u" + target + " --hostname -batch --threads=4", shell=True, stdout=subprocess.PIPE)
+        runsqlmap2 = subprocess.run("sqlmap -u " + target + " --hostname -batch --threads=4", shell=True, stdout=subprocess.PIPE)
         output2 = runsqlmap2.stdout.decode('utf-8')
 
 
         #variable to count how may times "MySQL" appears in string, to be used in searchsploit
         countmysql = output2.count("MySQL")
 
+        version_number=""
         output2 = output2.split("\n")
         for line2 in output2:
             if line2.startswith("back-end DBMS:"):
@@ -54,19 +55,12 @@ def databasescan(target):
                 lines_to_print = re.search(r'\d+', line2)
                 version_number = line2.split(" ")[-1][0:3]
 
-
-
-        #variable for database version
-
-
-
         if countmysql > 0:
             search_a = "MySQL"
-            print("yo!")
         else:
             search_a = 0
 
-        runsqlmap3 = subprocess.run("sudo sqlmap -u" + target + " -b -batch --threads=4", shell=True, stdout=subprocess.PIPE)
+        runsqlmap3 = subprocess.run("sqlmap -u " + target + " -b -batch --threads=4", shell=True, stdout=subprocess.PIPE)
         output3 = runsqlmap3.stdout.decode('utf-8')
         output3 = output3.split("\n")
         print(search_a)
@@ -76,11 +70,11 @@ def databasescan(target):
                 lines_to_print = re.search(r'\d+', line3)
 
         #print("searchsploit -t " + search_a + " " + lines_to_print)
-        print(" search_a is " + search_a)
-        res.append("YOUR " + search_a + " DATABASE CONTAINS THE FOLLOWING VULNERABILITIES")
-        runsearchsploit = subprocess.run("searchsploit -t " + search_a + " " + version_number + " --colour", shell=True, stdout=subprocess.PIPE)
+        print(" search_a is " + str(search_a))
+        res.append("YOUR " + str(search_a) + " DATABASE CONTAINS THE FOLLOWING VULNERABILITIES")
+        print("searchsploit -t " + str(search_a) + " " + version_number + " --colour")
+        runsearchsploit = subprocess.run("searchsploit -t " + str(search_a) + " " + version_number + " --colour", shell=True, stdout=subprocess.PIPE)
         output2 = runsearchsploit.stdout.decode('utf-8')
-        print(output2)
         output2 = output2.split("\n")
         for line in output2:
             res.append(line)
