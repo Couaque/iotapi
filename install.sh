@@ -16,7 +16,3 @@ echo "Installing Mozilla Cipher Scanner..."
 git clone https://github.com/mozilla/cipherscan
 
 ./cipherscan/cipherscan --curves -j google.com
-
-#git clone https://github.com/offensive-security/exploitdb.git /opt/exploitdb
-#sed 's|path_array+=(.*)|path_array+=("/opt/exploitdb")|g' /opt/exploitdb/.searchsploit_rc > ~/.searchsploit_rc
-#ln -sf /opt/exploitdb/searchsploit /usr/local/bin/searchsploit
