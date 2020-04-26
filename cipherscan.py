@@ -22,7 +22,8 @@ def cipherscan(target):
     #This allows us to keep the program running.
     except subprocess.CalledProcessError as err :
         print('ERROR:', err)
-        output = "ERROR: " + completed.stdout.decode('utf-8')
+        output[0] == "ERROR"
+        output[1] = completed.stdout.decode('utf-8')
 
     #We return an HTTP response anyway, error or not.
     return Response(output, mimetype="application/json")

@@ -61,7 +61,8 @@ def servicescan(target, ports):
     #This allows us to keep the program running.
     except subprocess.CalledProcessError as err :
         print('ERROR:', err)
-        res = "ERROR: " + completed.stdout.decode('utf-8')
+        output[0] == "ERROR"
+        output[1] = completed.stdout.decode('utf-8')
 
     #We return an HTTP response anyway, error or not.
     return Response(ujson.dumps(res), mimetype="application/json")

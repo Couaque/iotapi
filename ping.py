@@ -26,9 +26,10 @@ def ping(target):
         
     #If the process call goes wrong for some reason, we raise an exception.
     #This allows us to keep the program running.
-    except subprocess.CalledProcessError as err:
+    except subprocess.CalledProcessError as err :
         print('ERROR:', err)
-        output = "ERROR: " + err
+        output[0] == "ERROR"
+        output[1] = completed.stdout.decode('utf-8')
 
     #We return an HTTP response anyway, error or not.
     return Response(ujson.dumps(output), mimetype="application/json")

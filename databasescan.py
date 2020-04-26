@@ -81,9 +81,10 @@ def databasescan(target):
 
         print(output2)
 
-    except subprocess.CalledProcessError as err:
+    except subprocess.CalledProcessError as err :
         print('ERROR:', err)
-        output = "ERROR: " + err
+        output[0] == "ERROR"
+        output[1] = completed.stdout.decode('utf-8')
 
     return Response(ujson.dumps(res), mimetype="application/json")
 
