@@ -19,7 +19,7 @@ def scan_single_port(target, portnb, buffer):
     s = socket.socket()
     #This is a simple loading percentage allowing to see if the command is loading fast or not,
     #Without taking a look at the timer at the end
-    print(str((portnb / 65536) * 100), end = '\r')
+    print(str((portnb / 1024) * 100), end = '\r')
 
     #We try to connect to the specific port. 
     try:
@@ -54,7 +54,7 @@ def portscan(target, workers = 3):
     executor = ThreadPoolExecutor(max_workers=3)
     
     #We scan all ports in the range, created a thread for each of them
-    for port in range(1,65536) :
+    for port in range(1,1024) :
         executor.submit(scan_single_port, target, port, buffer)        
 
     #Now, we wait for a response from each port
