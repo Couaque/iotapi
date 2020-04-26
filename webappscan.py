@@ -1,7 +1,6 @@
 #!/bin/python3
 import ujson
 import sys
-from subprocess import *
 import subprocess
 from flask import Flask, Response, request
 from app import app
@@ -46,6 +45,9 @@ def results():
 
 @app.route("/webappscan/<target>")
 def webappscan(target):
+    res = []
+    res.clear()
+    print("Reached the HTTP listener !")
     command = subprocess.run("nikto -h " + target, shell=True, stdout=subprocess.PIPE)
     global output
     output = command.stdout.decode('utf-8')
@@ -53,7 +55,7 @@ def webappscan(target):
     #Call the collector function which will filter output
     for line in output:
         if line.startswith("+ Server:"):
-            server_version = line.replace("+ Server: ", '')
+            line.replace("+ Server: ", '')
         if line.startswith(tuple(filter_target)):
             target_information.append(line)
         if line.startswith(tuple(filter_ignore)):
@@ -61,5 +63,7 @@ def webappscan(target):
         #The ugly filtering begins, will do this differently later..
         if not "item(s) reported" in line and not "host(s) tested" in line and not "+ End Time:" in line and not "+ Start Time:" in line and not "-----" in line and not "+ Target IP:" in line and not "+ Target Hostname:" in line and not "+ Target Port:" in line and not "+ Server:" in line and not "- Nikto" in line:
             findings.append(line)  
-    return Response(ujson.dumps(findings), mimetype="application/json") 
+    res = findings
     findings.clear()
+    return Response(ujson.dumps(res), mimetype="application/json") 
+    
