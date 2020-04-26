@@ -45,8 +45,7 @@ def results():
 
 @app.route("/webappscan/<target>")
 def webappscan(target):
-    res = []
-    res.clear()
+    findings.clear()
     print("Reached the HTTP listener !")
     command = subprocess.run("nikto -h " + target, shell=True, stdout=subprocess.PIPE)
     global output
@@ -63,7 +62,5 @@ def webappscan(target):
         #The ugly filtering begins, will do this differently later..
         if not "item(s) reported" in line and not "host(s) tested" in line and not "+ End Time:" in line and not "+ Start Time:" in line and not "-----" in line and not "+ Target IP:" in line and not "+ Target Hostname:" in line and not "+ Target Port:" in line and not "+ Server:" in line and not "- Nikto" in line:
             findings.append(line)  
-    res = findings
-    findings.clear()
-    return Response(ujson.dumps(res), mimetype="application/json") 
+    return Response(ujson.dumps(findings), mimetype="application/json") 
     
