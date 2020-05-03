@@ -2,10 +2,10 @@
 echo "Please run this script with yavs' folder as your current folder !"
 
 echo "Installing Python3 and PIP from APT..."
-apt install python3 python3-pip nmap python python-pip git gunicorn -y
+apt install python3 python3-pip nmap python python-pip git -y
 
 echo "Installing Python modules from pip3 repos..."
-pip3 install flask ujson whatportis xmltodict regex sqlmap
+pip3 install flask ujson whatportis xmltodict regex sqlmap gunicorn
 
 echo "Install Python 2 dependancies"
 pip install six
