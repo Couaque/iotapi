@@ -41,20 +41,24 @@ def scan_single_port(target, portnb, buffer):
 #We have a special route here allowing us to choose what number of workers we want to run our port scanning.
 #The optimal one should be "number of cores - 1"
 @app.route('/portscan/<target>/<workers>')
-def portscan(target, workers = 3):
+@app.route('/portscan/<target>/<workers>/<portlimit>')
+def portscan(target, workers = 3, portlimit = 1024):
 
     #We start the timer to see how much time it took to run the port scan.
     #This is for debugging purposes
     starttime = time.time()
+    if portlimit != 1024 :
+        portlimit = atoi(portlimit)
+    
     
     #We create the array with the list of open ports that we will find in the future
     buffer =[]
 
     #We create our ThreadPoolExecutor to run the port scan on our pool of ports
-    executor = ThreadPoolExecutor(max_workers=3)
+    executor = ThreadPoolExecutor(max_workers=workers)
     
     #We scan all ports in the range, created a thread for each of them
-    for port in range(1,1024) :
+    for port in range(1, portlimit) :
         executor.submit(scan_single_port, target, port, buffer)        
 
     #Now, we wait for a response from each port
