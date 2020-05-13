@@ -13,13 +13,13 @@ q = Queue()
 
 #This function will open a socket to a single port.
 #This is called by whipper to take a port from the job queue and check it.
-def scan_single_port(target, portnb, buffer):
+def scan_single_port(target, portnb, buffer, portlimit):
 
     #We open the TCP socket
     s = socket.socket()
     #This is a simple loading percentage allowing to see if the command is loading fast or not,
     #Without taking a look at the timer at the end
-    print(str((portnb / 1024) * 100), end = '\r')
+    print(str((portnb / portlimit) * 100), end = '\r')
 
     #We try to connect to the specific port. 
     try:
@@ -42,14 +42,13 @@ def scan_single_port(target, portnb, buffer):
 #The optimal one should be "number of cores - 1"
 @app.route('/portscan/<target>/<workers>')
 @app.route('/portscan/<target>/<workers>/<portlimit>')
-def portscan(target, workers = 3, portlimit = 1024):
+def portscan(target, workers = 3, portlimit = 65535):
 
     #We start the timer to see how much time it took to run the port scan.
     #This is for debugging purposes
     starttime = time.time()
-    if portlimit != 1024 :
-        portlimit = atoi(portlimit)
-    
+    portlimit = int(portlimit)
+    workers = int(workers)
     
     #We create the array with the list of open ports that we will find in the future
     buffer =[]
@@ -59,7 +58,7 @@ def portscan(target, workers = 3, portlimit = 1024):
     
     #We scan all ports in the range, created a thread for each of them
     for port in range(1, portlimit) :
-        executor.submit(scan_single_port, target, port, buffer)        
+        executor.submit(scan_single_port, target, port, buffer, portlimit)        
 
     #Now, we wait for a response from each port
     executor.shutdown(wait=True)
